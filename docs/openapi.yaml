@@ -1,0 +1,1267 @@
+openapi: 3.0.3
+info:
+  title: Med-Life API
+  description: |
+    API para el sistema de gestión médica Med-Life. 
+    
+    ## Funcionalidades principales
+    - Gestión de pacientes
+    - Gestión de servicios médicos
+    - Gestión de citas
+    - Gestión de usuarios y roles
+    - Reportes y estadísticas
+    
+    ## Autenticación
+    Esta API utiliza Supabase Auth para la autenticación y autorización basada en roles.
+    
+  version: 1.0.0
+  contact:
+    name: Med-Life Support
+    email: support@med-life.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000/api
+    description: Servidor de desarrollo
+  - url: https://med-life.vercel.app/api
+    description: Servidor de producción
+
+tags:
+  - name: Patients
+    description: Gestión de pacientes
+  - name: Services
+    description: Gestión de servicios médicos
+  - name: Appointments
+    description: Gestión de citas médicas
+  - name: Users
+    description: Gestión de usuarios y roles
+  - name: Diagnostics
+    description: Endpoints de diagnóstico y pruebas
+
+components:
+  schemas:
+    Patient:
+      type: object
+      required:
+        - first_name
+        - last_name
+        - date_of_birth
+        - phone
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID único del paciente
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        first_name:
+          type: string
+          description: Nombre del paciente
+          example: "Juan"
+          maxLength: 100
+        last_name:
+          type: string
+          description: Apellido del paciente
+          example: "Pérez"
+          maxLength: 100
+        date_of_birth:
+          type: string
+          format: date
+          description: Fecha de nacimiento
+          example: "1985-03-15"
+        phone:
+          type: string
+          description: Número de teléfono
+          example: "+52 55 1111 1111"
+          maxLength: 20
+        email:
+          type: string
+          format: email
+          description: Correo electrónico
+          example: "juan.perez@email.com"
+          maxLength: 255
+        address:
+          type: string
+          description: Dirección del paciente
+          example: "Av. Insurgentes 123, CDMX"
+        tags:
+          type: array
+          items:
+            type: string
+          description: Etiquetas del paciente
+          example: ["diabetes", "hipertension"]
+        created_at:
+          type: string
+          format: date-time
+          description: Fecha de creación
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: Fecha de última actualización
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          description: ID del usuario que creó el registro
+          readOnly: true
+
+    Service:
+      type: object
+      required:
+        - name
+        - duration_minutes
+        - base_price
+        - channel
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID único del servicio
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          description: Nombre del servicio
+          example: "Consulta General"
+          maxLength: 255
+        description:
+          type: string
+          description: Descripción del servicio
+          example: "Consulta médica general"
+        duration_minutes:
+          type: integer
+          description: Duración en minutos
+          example: 30
+          minimum: 1
+        base_price:
+          type: number
+          format: decimal
+          description: Precio base del servicio
+          example: 500.00
+          minimum: 0
+        channel:
+          type: string
+          enum: [presencial, telemedicina, ambos]
+          description: Canal de atención
+          example: "presencial"
+        color:
+          type: string
+          description: Color hexadecimal para la interfaz
+          example: "#3B82F6"
+          pattern: "^#[0-9A-Fa-f]{6}$"
+        is_active:
+          type: boolean
+          description: Si el servicio está activo
+          example: true
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          description: Fecha de creación
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: Fecha de última actualización
+          readOnly: true
+
+    Appointment:
+      type: object
+      required:
+        - patient_id
+        - service_id
+        - scheduled_date
+        - scheduled_time
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID único de la cita
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        patient_id:
+          type: string
+          format: uuid
+          description: ID del paciente
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        service_id:
+          type: string
+          format: uuid
+          description: ID del servicio
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        scheduled_date:
+          type: string
+          format: date
+          description: Fecha programada
+          example: "2025-09-26"
+        scheduled_time:
+          type: string
+          format: time
+          description: Hora programada
+          example: "14:30:00"
+        status:
+          type: string
+          enum: [programada, confirmada, en_curso, completada, cancelada, no_asistio]
+          description: Estado de la cita
+          example: "programada"
+          default: "programada"
+        channel:
+          type: string
+          enum: [presencial, telemedicina]
+          description: Canal de la cita
+          example: "presencial"
+        notes:
+          type: string
+          description: Notas adicionales
+          example: "Paciente requiere ayuno"
+        created_at:
+          type: string
+          format: date-time
+          description: Fecha de creación
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: Fecha de última actualización
+          readOnly: true
+
+    User:
+      type: object
+      required:
+        - email
+        - first_name
+        - last_name
+        - role
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID único del usuario
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        email:
+          type: string
+          format: email
+          description: Correo electrónico
+          example: "doctor@med-life.com"
+        first_name:
+          type: string
+          description: Nombre
+          example: "Dr. Carlos"
+          maxLength: 100
+        last_name:
+          type: string
+          description: Apellido
+          example: "García"
+          maxLength: 100
+        role:
+          type: string
+          enum: [admin, medico, recepcion]
+          description: Rol del usuario
+          example: "medico"
+        phone:
+          type: string
+          description: Teléfono
+          example: "+52 55 9999 9999"
+        is_active:
+          type: boolean
+          description: Si el usuario está activo
+          example: true
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          description: Fecha de creación
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: Fecha de última actualización
+          readOnly: true
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Mensaje de error
+          example: "No se encontró el recurso solicitado"
+        details:
+          type: object
+          description: Detalles adicionales del error
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp del error
+
+    PaginatedResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+          description: Datos de la página actual
+        pagination:
+          type: object
+          properties:
+            page:
+              type: integer
+              description: Página actual
+              example: 1
+            limit:
+              type: integer
+              description: Elementos por página
+              example: 10
+            total:
+              type: integer
+              description: Total de elementos
+              example: 100
+            pages:
+              type: integer
+              description: Total de páginas
+              example: 10
+
+paths:
+  /patients:
+    get:
+      tags:
+        - Patients
+      summary: Obtener lista de pacientes
+      description: Obtiene una lista paginada de pacientes con opción de búsqueda
+      parameters:
+        - name: page
+          in: query
+          description: Número de página
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Elementos por página
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: search
+          in: query
+          description: Término de búsqueda (nombre, apellido, email)
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de pacientes obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Patient'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Patients
+      summary: Crear nuevo paciente
+      description: Crea un nuevo paciente en el sistema
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - first_name
+                - last_name
+                - date_of_birth
+                - phone
+              properties:
+                first_name:
+                  type: string
+                  example: "María"
+                last_name:
+                  type: string
+                  example: "González"
+                date_of_birth:
+                  type: string
+                  format: date
+                  example: "1990-07-22"
+                phone:
+                  type: string
+                  example: "+52 55 2222 2222"
+                email:
+                  type: string
+                  format: email
+                  example: "maria.gonzalez@email.com"
+                address:
+                  type: string
+                  example: "Calle Reforma 456, CDMX"
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  example: ["embarazo"]
+      responses:
+        '201':
+          description: Paciente creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '400':
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /patients/{id}:
+    get:
+      tags:
+        - Patients
+      summary: Obtener paciente por ID
+      description: Obtiene los datos de un paciente específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del paciente
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Datos del paciente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '404':
+          description: Paciente no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Patients
+      summary: Actualizar paciente
+      description: Actualiza los datos de un paciente existente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del paciente
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                date_of_birth:
+                  type: string
+                  format: date
+                phone:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                address:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Paciente actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '404':
+          description: Paciente no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Patients
+      summary: Eliminar paciente
+      description: Elimina un paciente del sistema
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del paciente
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Paciente eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Paciente eliminado exitosamente"
+        '404':
+          description: Paciente no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /services:
+    get:
+      tags:
+        - Services
+      summary: Obtener lista de servicios
+      description: Obtiene una lista de todos los servicios médicos disponibles
+      parameters:
+        - name: active_only
+          in: query
+          description: Solo servicios activos
+          required: false
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Lista de servicios obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Service'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Services
+      summary: Crear nuevo servicio
+      description: Crea un nuevo servicio médico
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - duration_minutes
+                - base_price
+                - channel
+              properties:
+                name:
+                  type: string
+                  example: "Consulta Especialista"
+                description:
+                  type: string
+                  example: "Consulta con médico especialista"
+                duration_minutes:
+                  type: integer
+                  example: 45
+                base_price:
+                  type: number
+                  example: 800.00
+                channel:
+                  type: string
+                  enum: [presencial, telemedicina, ambos]
+                  example: "ambos"
+                color:
+                  type: string
+                  example: "#EF4444"
+      responses:
+        '201':
+          description: Servicio creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '400':
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /services/{id}:
+    get:
+      tags:
+        - Services
+      summary: Obtener servicio por ID
+      description: Obtiene los datos de un servicio específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del servicio
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Datos del servicio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '404':
+          description: Servicio no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Services
+      summary: Actualizar servicio
+      description: Actualiza los datos de un servicio existente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del servicio
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                duration_minutes:
+                  type: integer
+                base_price:
+                  type: number
+                channel:
+                  type: string
+                  enum: [presencial, telemedicina, ambos]
+                color:
+                  type: string
+                is_active:
+                  type: boolean
+      responses:
+        '200':
+          description: Servicio actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '404':
+          description: Servicio no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Services
+      summary: Eliminar servicio
+      description: Elimina un servicio del sistema
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del servicio
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Servicio eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Servicio eliminado exitosamente"
+        '404':
+          description: Servicio no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /appointments:
+    get:
+      tags:
+        - Appointments
+      summary: Obtener lista de citas
+      description: Obtiene una lista paginada de citas con opciones de filtrado
+      parameters:
+        - name: page
+          in: query
+          description: Número de página
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Elementos por página
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: date_from
+          in: query
+          description: Fecha de inicio del filtro
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          description: Fecha de fin del filtro
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: status
+          in: query
+          description: Filtrar por estado
+          required: false
+          schema:
+            type: string
+            enum: [programada, confirmada, en_curso, completada, cancelada, no_asistio]
+        - name: patient_id
+          in: query
+          description: Filtrar por paciente
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Lista de citas obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Appointment'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Appointments
+      summary: Crear nueva cita
+      description: Crea una nueva cita médica
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - patient_id
+                - service_id
+                - scheduled_date
+                - scheduled_time
+              properties:
+                patient_id:
+                  type: string
+                  format: uuid
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                service_id:
+                  type: string
+                  format: uuid
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                scheduled_date:
+                  type: string
+                  format: date
+                  example: "2025-09-26"
+                scheduled_time:
+                  type: string
+                  format: time
+                  example: "14:30:00"
+                channel:
+                  type: string
+                  enum: [presencial, telemedicina]
+                  example: "presencial"
+                notes:
+                  type: string
+                  example: "Paciente requiere ayuno"
+      responses:
+        '201':
+          description: Cita creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '400':
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflicto de horario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /appointments/{id}:
+    get:
+      tags:
+        - Appointments
+      summary: Obtener cita por ID
+      description: Obtiene los datos de una cita específica
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la cita
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Datos de la cita
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '404':
+          description: Cita no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Appointments
+      summary: Actualizar cita
+      description: Actualiza los datos de una cita existente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la cita
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scheduled_date:
+                  type: string
+                  format: date
+                scheduled_time:
+                  type: string
+                  format: time
+                status:
+                  type: string
+                  enum: [programada, confirmada, en_curso, completada, cancelada, no_asistio]
+                channel:
+                  type: string
+                  enum: [presencial, telemedicina]
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Cita actualizada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '404':
+          description: Cita no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflicto de horario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Appointments
+      summary: Cancelar cita
+      description: Cancela una cita médica
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la cita
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Cita cancelada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Cita cancelada exitosamente"
+        '404':
+          description: Cita no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Obtener lista de usuarios
+      description: Obtiene una lista de usuarios del sistema (requiere permisos de admin)
+      parameters:
+        - name: role
+          in: query
+          description: Filtrar por rol
+          required: false
+          schema:
+            type: string
+            enum: [admin, medico, recepcion]
+        - name: active_only
+          in: query
+          description: Solo usuarios activos
+          required: false
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Lista de usuarios obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '403':
+          description: Acceso denegado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Users
+      summary: Crear nuevo usuario
+      description: Crea un nuevo usuario en el sistema (requiere permisos de admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - first_name
+                - last_name
+                - role
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "doctor@med-life.com"
+                first_name:
+                  type: string
+                  example: "Dr. Carlos"
+                last_name:
+                  type: string
+                  example: "García"
+                role:
+                  type: string
+                  enum: [admin, medico, recepcion]
+                  example: "medico"
+                phone:
+                  type: string
+                  example: "+52 55 9999 9999"
+                password:
+                  type: string
+                  format: password
+                  example: "password123"
+                  minLength: 8
+      responses:
+        '201':
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Acceso denegado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Email ya existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Endpoints de diagnóstico
+  /check-tables:
+    get:
+      tags:
+        - Diagnostics
+      summary: Verificar estado de las tablas
+      description: Verifica si las tablas principales existen y tienen datos
+      responses:
+        '200':
+          description: Estado de las tablas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  status:
+                    type: string
+                    example: "4/4 tables exist"
+                  existingTables:
+                    type: array
+                    items:
+                      type: string
+                    example: ["patients", "services", "appointments", "users"]
+                  missingTables:
+                    type: array
+                    items:
+                      type: string
+                    example: []
+                  details:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        exists:
+                          type: boolean
+                        count:
+                          type: integer
+                        error:
+                          type: string
+                  recommendation:
+                    type: string
+                    example: "Some tables are missing, check schema execution"
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /test-db:
+    get:
+      tags:
+        - Diagnostics
+      summary: Prueba completa de base de datos
+      description: Realiza pruebas completas de conectividad y funcionalidad de la base de datos
+      responses:
+        '200':
+          description: Resultados de las pruebas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  tests:
+                    type: object
+                    properties:
+                      connection:
+                        type: boolean
+                      patients:
+                        type: object
+                        properties:
+                          success:
+                            type: boolean
+                          count:
+                            type: integer
+                          error:
+                            type: string
+                          data:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Patient'
+                      services:
+                        type: object
+                        properties:
+                          success:
+                            type: boolean
+                          count:
+                            type: integer
+                          error:
+                            type: string
+                          data:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Service'
+                  timestamp:
+                    type: string
+                    format: date-time
