@@ -96,7 +96,25 @@ export function DataTable<T extends Record<string, any>>({
 
         {/* New button */}
         {onNew && (
-          <Button onClick={onNew}>
+          <Button 
+            onClick={onNew}
+            className="text-white font-medium transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md active:scale-95 border-0"
+            style={{backgroundColor: '#EC5E27'}}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#d44a1f'
+              e.currentTarget.style.transform = 'translateY(-1px)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#EC5E27'
+              e.currentTarget.style.transform = 'translateY(0)'
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.transform = 'translateY(0) scale(0.98)'
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.transform = 'translateY(-1px) scale(1)'
+            }}
+          >
             <Plus className="h-4 w-4 mr-2" />
             {newButtonText}
           </Button>

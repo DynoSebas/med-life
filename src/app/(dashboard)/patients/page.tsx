@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { DataTable } from '@/components/data-table'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -10,6 +11,7 @@ import { es } from 'date-fns/locale'
 import { Eye, Edit, Phone, Mail } from 'lucide-react'
 
 export default function PatientsPage() {
+  const router = useRouter()
   const [patients, setPatients] = useState<Patient[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -54,7 +56,7 @@ export default function PatientsPage() {
         <div>
           <div className="font-medium">{patient.first_name} {patient.last_name}</div>
           <div className="text-sm text-gray-500">
-            {format(new Date(patient.date_of_birth), 'dd/MM/yyyy', { locale: es })}
+            {patient.date_of_birth ? format(new Date(patient.date_of_birth), 'dd/MM/yyyy', { locale: es }) : 'Sin fecha'}
           </div>
         </div>
       )
@@ -104,10 +106,12 @@ export default function PatientsPage() {
       header: 'Acciones',
       render: (patient: Patient) => (
         <div className="flex space-x-2">
-          <Button variant="ghost" size="sm">
-            <Eye className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="sm">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => router.push(`/patients/${patient.id}/edit`)}
+            title="Editar paciente"
+          >
             <Edit className="h-4 w-4" />
           </Button>
         </div>
@@ -127,7 +131,7 @@ export default function PatientsPage() {
         columns={columns}
         searchPlaceholder="Buscar por nombre, teléfono o email..."
         onSearch={handleSearch}
-        onNew={() => console.log('Nuevo paciente')}
+        onNew={() => router.push('/patients/new')}
         newButtonText="Nuevo Paciente"
         loading={loading}
         emptyMessage="No se encontraron pacientes"

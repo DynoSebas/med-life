@@ -52,11 +52,43 @@ export interface Database {
           first_name: string
           last_name: string
           date_of_birth: string
+          sex: string | null
           phone: string | null
           email: string | null
           address: string | null
+          city: string | null
+          postal_code: string | null
           emergency_contact_name: string | null
           emergency_contact_phone: string | null
+          emergency_contact_relation: string | null
+          allergies: string[] | null
+          chronic_conditions: string[] | null
+          current_medications: Array<{
+            drug: string
+            dose: string
+            frequency: string
+            notes?: string
+          }> | null
+          previous_surgeries: string[] | null
+          family_history: Record<string, string> | null
+          smoking_status: string | null
+          alcohol_consumption: string | null
+          physical_activity: string | null
+          sleep_habits: string | null
+          diet_habits: string | null
+          height_cm: number | null
+          weight_kg: number | null
+          bmi: number | null
+          blood_pressure: string | null
+          heart_rate: number | null
+          respiratory_rate: number | null
+          temperature: number | null
+          oxygen_saturation: number | null
+          soap_subjective: string | null
+          soap_objective: string | null
+          soap_assessment: string | null
+          soap_plan: string | null
+          diagnoses_cie10: string[] | null
           tags: string[] | null
           notes: string | null
           is_active: boolean
@@ -69,11 +101,43 @@ export interface Database {
           first_name: string
           last_name: string
           date_of_birth: string
+          sex?: string | null
           phone?: string | null
           email?: string | null
           address?: string | null
+          city?: string | null
+          postal_code?: string | null
           emergency_contact_name?: string | null
           emergency_contact_phone?: string | null
+          emergency_contact_relation?: string | null
+          allergies?: string[] | null
+          chronic_conditions?: string[] | null
+          current_medications?: Array<{
+            drug: string
+            dose: string
+            frequency: string
+            notes?: string
+          }> | null
+          previous_surgeries?: string[] | null
+          family_history?: Record<string, string> | null
+          smoking_status?: string | null
+          alcohol_consumption?: string | null
+          physical_activity?: string | null
+          sleep_habits?: string | null
+          diet_habits?: string | null
+          height_cm?: number | null
+          weight_kg?: number | null
+          bmi?: number | null
+          blood_pressure?: string | null
+          heart_rate?: number | null
+          respiratory_rate?: number | null
+          temperature?: number | null
+          oxygen_saturation?: number | null
+          soap_subjective?: string | null
+          soap_objective?: string | null
+          soap_assessment?: string | null
+          soap_plan?: string | null
+          diagnoses_cie10?: string[] | null
           tags?: string[] | null
           notes?: string | null
           is_active?: boolean
@@ -86,11 +150,43 @@ export interface Database {
           first_name?: string
           last_name?: string
           date_of_birth?: string
+          sex?: string | null
           phone?: string | null
           email?: string | null
           address?: string | null
+          city?: string | null
+          postal_code?: string | null
           emergency_contact_name?: string | null
           emergency_contact_phone?: string | null
+          emergency_contact_relation?: string | null
+          allergies?: string[] | null
+          chronic_conditions?: string[] | null
+          current_medications?: Array<{
+            drug: string
+            dose: string
+            frequency: string
+            notes?: string
+          }> | null
+          previous_surgeries?: string[] | null
+          family_history?: Record<string, string> | null
+          smoking_status?: string | null
+          alcohol_consumption?: string | null
+          physical_activity?: string | null
+          sleep_habits?: string | null
+          diet_habits?: string | null
+          height_cm?: number | null
+          weight_kg?: number | null
+          bmi?: number | null
+          blood_pressure?: string | null
+          heart_rate?: number | null
+          respiratory_rate?: number | null
+          temperature?: number | null
+          oxygen_saturation?: number | null
+          soap_subjective?: string | null
+          soap_objective?: string | null
+          soap_assessment?: string | null
+          soap_plan?: string | null
+          diagnoses_cie10?: string[] | null
           tags?: string[] | null
           notes?: string | null
           is_active?: boolean
@@ -239,6 +335,128 @@ export interface Database {
         }
         Update: Partial<Database['public']['Tables']['medical_records']['Insert']>
       }
+      consultations: {
+        Row: {
+          id: string
+          patient_id: string
+          doctor_id: string | null
+          consultation_date: string
+          consultation_time: string | null
+          soap_subjective: string | null
+          soap_objective: string | null
+          soap_assessment: string | null
+          soap_plan: string | null
+          diagnoses_cie10: string[] | null
+          height_cm: number | null
+          weight_kg: number | null
+          bmi: number | null
+          blood_pressure: string | null
+          heart_rate: number | null
+          respiratory_rate: number | null
+          temperature: number | null
+          oxygen_saturation: number | null
+          prescribed_medications: Array<{
+            drug: string
+            dose: string
+            frequency: string
+            duration?: string
+            notes?: string
+          }> | null
+          requested_studies: Array<{
+            type: string
+            description: string
+            urgent?: boolean
+            notes?: string
+          }> | null
+          next_appointment_suggested: string | null
+          follow_up_notes: string | null
+          status: 'draft' | 'completed' | 'cancelled'
+          private_notes: string | null
+          created_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          patient_id: string
+          doctor_id?: string | null
+          consultation_date?: string
+          consultation_time?: string | null
+          soap_subjective?: string | null
+          soap_objective?: string | null
+          soap_assessment?: string | null
+          soap_plan?: string | null
+          diagnoses_cie10?: string[] | null
+          height_cm?: number | null
+          weight_kg?: number | null
+          bmi?: number | null
+          blood_pressure?: string | null
+          heart_rate?: number | null
+          respiratory_rate?: number | null
+          temperature?: number | null
+          oxygen_saturation?: number | null
+          prescribed_medications?: Array<{
+            drug: string
+            dose: string
+            frequency: string
+            duration?: string
+            notes?: string
+          }> | null
+          requested_studies?: Array<{
+            type: string
+            description: string
+            urgent?: boolean
+            notes?: string
+          }> | null
+          next_appointment_suggested?: string | null
+          follow_up_notes?: string | null
+          status?: 'draft' | 'completed' | 'cancelled'
+          private_notes?: string | null
+          created_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          patient_id?: string
+          doctor_id?: string | null
+          consultation_date?: string
+          consultation_time?: string | null
+          soap_subjective?: string | null
+          soap_objective?: string | null
+          soap_assessment?: string | null
+          soap_plan?: string | null
+          diagnoses_cie10?: string[] | null
+          height_cm?: number | null
+          weight_kg?: number | null
+          bmi?: number | null
+          blood_pressure?: string | null
+          heart_rate?: number | null
+          respiratory_rate?: number | null
+          temperature?: number | null
+          oxygen_saturation?: number | null
+          prescribed_medications?: Array<{
+            drug: string
+            dose: string
+            frequency: string
+            duration?: string
+            notes?: string
+          }> | null
+          requested_studies?: Array<{
+            type: string
+            description: string
+            urgent?: boolean
+            notes?: string
+          }> | null
+          next_appointment_suggested?: string | null
+          follow_up_notes?: string | null
+          status?: 'draft' | 'completed' | 'cancelled'
+          private_notes?: string | null
+          created_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
       campaigns: {
         Row: {
           id: string
@@ -309,6 +527,7 @@ export type Patient = Database['public']['Tables']['patients']['Row']
 export type Service = Database['public']['Tables']['services']['Row']
 export type Appointment = Database['public']['Tables']['appointments']['Row']
 export type MedicalRecord = Database['public']['Tables']['medical_records']['Row']
+export type Consultation = Database['public']['Tables']['consultations']['Row']
 export type Campaign = Database['public']['Tables']['campaigns']['Row']
 
 // Extended types with relations
@@ -329,4 +548,15 @@ export type MedicalRecordWithRelations = MedicalRecord & {
   patient: Patient
   doctor: User
   appointment?: Appointment
+}
+
+export type ConsultationWithRelations = Consultation & {
+  patient: Patient
+  doctor: User | null
+}
+
+export type PatientWithConsultations = Patient & {
+  consultations?: Consultation[]
+  last_consultation?: Consultation
+  total_consultations: number
 }

@@ -1,26 +1,93 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Med-Life Brand Colors - Paleta PINE & MILK */
+  --med-pine: #00311F;
+  --med-milk: #EC5E27;
+  
+  /* Pine color variations */
+  --med-pine-50: #f0f9f4;
+  --med-pine-100: #dcf2e4;
+  --med-pine-200: #bce5cc;
+  --med-pine-300: #8dd2a8;
+  --med-pine-400: #56b67d;
+  --med-pine-500: #329d5c;
+  --med-pine-600: #247d47;
+  --med-pine-700: #1d6239;
+  --med-pine-800: #184f2f;
+  --med-pine-900: #143f27;
+  --med-pine-950: #00311F;
+  
+  /* Milk color variations */
+  --med-milk-50: #fef7f2;
+  --med-milk-100: #fdeee0;
+  --med-milk-200: #f9dac0;
+  --med-milk-300: #f5c295;
+  --med-milk-400: #f0a169;
+  --med-milk-500: #ec7c44;
+  --med-milk-600: #EC5E27;
+  --med-milk-700: #d44a1f;
+  --med-milk-800: #b03d1d;
+  --med-milk-900: #8e341c;
+  --med-milk-950: #4d1a0d;
+  
+  /* Main theme colors */
+  --background: #fefefe;
+  --foreground: var(--med-pine-950);
+  --primary: var(--med-pine);
+  --primary-foreground: #ffffff;
+  --secondary: var(--med-milk);
+  --secondary-foreground: #ffffff;
+  --accent: var(--med-pine-100);
+  --accent-foreground: var(--med-pine-950);
+  --muted: var(--med-pine-50);
+  --muted-foreground: var(--med-pine-700);
+  --border: var(--med-pine-200);
+  --input: var(--med-pine-200);
+  --ring: var(--med-pine);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* Utility classes for Med-Life brand colors */
+.med-pine { background-color: var(--med-pine); }
+.med-milk { background-color: var(--med-milk); }
+.text-med-pine { color: var(--med-pine); }
+.text-med-milk { color: var(--med-milk); }
+.border-med-pine { border-color: var(--med-pine); }
+.border-med-milk { border-color: var(--med-milk); }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--med-pine-950);
+    --foreground: var(--med-milk-50);
+    --primary: var(--med-pine-300);
+    --primary-foreground: var(--med-pine-950);
+    --secondary: var(--med-milk-400);
+    --secondary-foreground: var(--med-pine-950);
+    --accent: var(--med-pine-800);
+    --accent-foreground: var(--med-milk-50);
+    --muted: var(--med-pine-900);
+    --muted-foreground: var(--med-pine-300);
+    --border: var(--med-pine-800);
+    --input: var(--med-pine-800);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
 }
+
+/* Asegurar que todos los elementos usen Montserrat */
+* {
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+}
+
+/* Configuración específica para diferentes pesos de Montserrat */
+.font-light { font-weight: 300; }
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }
+.font-black { font-weight: 900; }

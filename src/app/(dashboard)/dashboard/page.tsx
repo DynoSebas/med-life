@@ -6,20 +6,20 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600">Resumen general de Med-Life</p>
+        <h1 className="text-3xl font-bold text-med-pine">Dashboard</h1>
+        <p className="text-med-pine-600">Resumen general de Med-Life</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pacientes Activos</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-med-pine">Pacientes Activos</CardTitle>
+            <Users className="h-4 w-4 text-med-milk" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,234</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold text-med-pine">1,234</div>
+            <p className="text-xs text-med-pine-600">
               +12% desde el mes pasado
             </p>
           </CardContent>
@@ -27,12 +27,12 @@ export default function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Citas Hoy</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-med-pine">Citas Hoy</CardTitle>
+            <Calendar className="h-4 w-4 text-med-milk" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">28</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold text-med-pine">28</div>
+            <p className="text-xs text-med-pine-600">
               3 pendientes de confirmar
             </p>
           </CardContent>
@@ -40,12 +40,12 @@ export default function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Servicios Activos</CardTitle>
-            <Stethoscope className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-med-pine">Servicios Activos</CardTitle>
+            <Stethoscope className="h-4 w-4 text-med-milk" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">15</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold text-med-pine">15</div>
+            <p className="text-xs text-med-pine-600">
               En 3 especialidades
             </p>
           </CardContent>
@@ -53,12 +53,12 @@ export default function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ingresos del Mes</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-med-pine">Ingresos del Mes</CardTitle>
+            <TrendingUp className="h-4 w-4 text-med-milk" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$84,500</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold text-med-pine">$84,500</div>
+            <p className="text-xs text-med-pine-600">
               +8% desde el mes pasado
             </p>
           </CardContent>
@@ -80,14 +80,14 @@ export default function DashboardPage() {
                 { time: '10:00', patient: 'María Rodríguez', service: 'Telemedicina', status: 'confirmada' },
                 { time: '10:30', patient: 'Pedro Martín', service: 'Electrocardiograma', status: 'programada' },
               ].map((appointment, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 bg-med-pine-50 rounded-lg">
                   <div className="flex items-center space-x-3">
-                    <div className="text-sm font-medium text-gray-900">
+                    <div className="text-sm font-medium text-med-pine">
                       {appointment.time}
                     </div>
                     <div>
-                      <div className="text-sm font-medium">{appointment.patient}</div>
-                      <div className="text-sm text-gray-500">{appointment.service}</div>
+                      <div className="text-sm font-medium text-med-pine">{appointment.patient}</div>
+                      <div className="text-sm text-med-pine-600">{appointment.service}</div>
                     </div>
                   </div>
                   <Badge variant={appointment.status === 'confirmada' ? 'success' : 'warning'}>
@@ -107,12 +107,12 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-start space-x-3 p-3 border-l-4 border-yellow-400 bg-yellow-50 rounded">
+              <div className="flex items-start space-x-3 p-3 border-l-4 border-med-milk bg-med-milk-50 rounded">
                 <div className="flex-1">
-                  <div className="text-sm font-medium text-yellow-800">
+                  <div className="text-sm font-medium text-med-milk-800">
                     3 pacientes sin confirmar cita
                   </div>
-                  <div className="text-sm text-yellow-600">
+                  <div className="text-sm text-med-milk-600">
                     Recordatorios enviados hace 2 horas
                   </div>
                 </div>
@@ -129,12 +129,12 @@ export default function DashboardPage() {
                 </div>
               </div>
               
-              <div className="flex items-start space-x-3 p-3 border-l-4 border-blue-400 bg-blue-50 rounded">
+              <div className="flex items-start space-x-3 p-3 border-l-4 border-med-pine bg-med-pine-50 rounded">
                 <div className="flex-1">
-                  <div className="text-sm font-medium text-blue-800">
+                  <div className="text-sm font-medium text-med-pine-800">
                     Campaña Día de las Madres
                   </div>
-                  <div className="text-sm text-blue-600">
+                  <div className="text-sm text-med-pine-600">
                     Próximo envío programado para mañana
                   </div>
                 </div>
